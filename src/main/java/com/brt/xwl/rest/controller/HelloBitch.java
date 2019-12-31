@@ -16,8 +16,9 @@ public class HelloBitch {
 
 	@GetMapping("/person/{personId}/name")
 	@ApiOperation(value="查询用户名接口")
-	@ApiImplicitParam(paramType="path",name="userId",value="用户id",dataType="Long",required=true)
-	public ResEntity getNames(@PathVariable Long userId) {
+	@ApiImplicitParam(paramType="path",name="personId",value="用户id",dataType="Long",required=true)
+	public ResEntity getNames(@PathVariable Long personId) {
+		
 		return new ResEntity("张三",true,"成功");
 	}
 }

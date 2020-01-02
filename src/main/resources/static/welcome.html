@@ -14,9 +14,16 @@
 	<h1>hello html!</h1>
 	<script type="text/javascript"
 		src="/js/jquery/jquery-1.9.0.min.js"></script>
+	<script type="text/javascript"
+	src="/js/vue/vue.js"></script>
 	<script>
 		$(function(){
-			alert("a")
+			alert("a");
+			var vm = new Vue({
+				  el: '#example',
+				  data: data
+				});
+			
 		})
 	</script>
 </body>

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -101,7 +102,7 @@ public class EasyControllerSwagger {
 		for(File controllerFile:controllerFiles) {
 			String contents = FileUtils.readContentsFromFile(controllerFile);
 			String contentsCopy = new String(contents);
-			Class<?> controllerClass = getClassByFileName(controllerFile.getName());
+			Class<?> controllerClass = getClassByFileName(controllerFile);
 			boolean isControllerClass = isController(controllerClass);
 			if(isControllerClass) {
 				contentsCopy = addApiToClass(controllerClass,contentsCopy);
@@ -122,8 +123,11 @@ public class EasyControllerSwagger {
 		return (isController || isRestController);
 	}
 
-	private static Class<?> getClassByFileName(String fileName) throws ClassNotFoundException {
-		String className = controllerPackageName+"."+fileName;
+	private static Class<?> getClassByFileName(File file) throws ClassNotFoundException {
+		String path = file.getPath();
+		path = path.replace("\\", ".");
+		path = path.substring(path.indexOf(controllerPackageName));
+		String className = path.replace(".java", "");
 		className = className.replace(".java", "");
 		Class<?> controllerClass = Class.forName(className);
 		return controllerClass;
@@ -217,7 +221,8 @@ public class EasyControllerSwagger {
 			if(!method.isAnnotationPresent(RequestMapping.class)
 					&& !method.isAnnotationPresent(GetMapping.class)
 					&& !method.isAnnotationPresent(PutMapping.class)
-					&& !method.isAnnotationPresent(DeleteMapping.class))
+					&& !method.isAnnotationPresent(DeleteMapping.class)
+					&& !method.isAnnotationPresent(PostMapping.class))
 				continue;
 			if(method.isAnnotationPresent(ApiImplicitParams.class) || method.isAnnotationPresent(ApiImplicitParam.class))
 				continue;
@@ -334,7 +339,8 @@ public class EasyControllerSwagger {
 			if(method.isAnnotationPresent(RequestMapping.class) 
 					|| method.isAnnotationPresent(GetMapping.class)
 					|| method.isAnnotationPresent(PutMapping.class)
-					|| method.isAnnotationPresent(DeleteMapping.class)) {
+					|| method.isAnnotationPresent(DeleteMapping.class)
+					|| method.isAnnotationPresent(PostMapping.class)) {
 				String typeName = getReTurnTypeByMethod(method);
 				String oldMethod = "\tpublic " + typeName+ " " + method.getName();
 				contents = contents.replace(oldMethod, "\t@ApiOperation(value=\"\")\n"+oldMethod);

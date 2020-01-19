@@ -1,5 +1,6 @@
 package com.brt.xwl.rest.controller;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,4 +22,6 @@ public class HelloBitch {
 		
 		return new ResEntity("张三",true,"成功");
 	}
+	
+	
 }
